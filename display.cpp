@@ -11,7 +11,6 @@ void printBanner(){
     std::cout << "        WORDLE CLI         \n";
     std::cout << "===========================\n\n";
 }
-
 void printGuess(const std::string& guess, const std::vector<LetterStatus>& feedback) {
     for(size_t i = 0 ; i < guess.length(); i++){
         if(feedback[i] == LetterStatus::Green){
