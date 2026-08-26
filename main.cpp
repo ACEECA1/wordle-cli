@@ -1,6 +1,6 @@
 #include <iostream>
 #include "evaluator.hpp"
-
+#include "display.hpp"
 void printResult(const std::string& guess, const std::vector<LetterStatus>& res) {
     std::cout << "Guess: " << guess << " -> ";
     for (auto status : res) {
@@ -12,12 +12,8 @@ void printResult(const std::string& guess, const std::vector<LetterStatus>& res)
 }
 
 int main() {
-    std::string secret = "ROBOT";
-    std::string guess = "BOBBY";
-
-    auto result = evaluate(secret, guess);
-    printResult(guess, result);
-    // Expected: [Y] [G] [G] [_] [_]
-
+    clearScreen();
+    printBanner();
+    printGuess("BOBBY", evaluate("ROBOT", "BOBBY"));
     return 0;
 }
