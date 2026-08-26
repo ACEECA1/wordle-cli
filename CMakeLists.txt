@@ -6,16 +6,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
+set(CPR_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(CPR_ENABLE_SSL ON CACHE BOOL "" FORCE)
+
+if(WIN32)
+    set(CPR_USE_WINSSL ON CACHE BOOL "" FORCE)
+    set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)
+endif()
+
 find_package(cpr CONFIG QUIET)
 find_package(nlohmann_json CONFIG QUIET)
 
 if(NOT TARGET cpr::cpr)
-    set(CPR_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-    set(CPR_ENABLE_SSL ON CACHE BOOL "" FORCE)
     FetchContent_Declare(
         cpr
         GIT_REPOSITORY https://github.com/libcpr/cpr.git
-        GIT_TAG 2553fc43a393e96e625a287239272304d7aa8eae
+        GIT_TAG 1.10.5
     )
     FetchContent_MakeAvailable(cpr)
 endif()
