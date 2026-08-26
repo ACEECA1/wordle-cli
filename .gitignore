@@ -1,3 +1,4 @@
 wordle
 *.o
 test_dict
+.vscode/

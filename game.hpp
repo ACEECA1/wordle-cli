@@ -2,13 +2,19 @@
 #include <string>
 #include <vector>
 
-class Game{
-    size_t length = 5;
-    int maxAttempts = 6;
-    std::string targetWord = "";
-    std::vector<std::string> guesses = {};
-    bool isWon = false;
-    public:
-        Game(int length, int maxAttempts);
-        void play();
+class Game {
+private:
+    int length;
+    int maxAttempts;
+    std::string targetWord;
+    std::vector<std::string> guesses;
+    bool isWon;
+
+    void renderBoard() const;
+    std::string promptGuess(int attemptNumber);
+    void printSummary() const;
+
+public:
+    Game(int length = 5, int maxAttempts = 6);
+    void play();
 };

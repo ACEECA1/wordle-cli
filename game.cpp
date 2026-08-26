@@ -5,49 +5,67 @@
 #include <iostream>
 #include <algorithm>
 
-Game::Game(int length, int maxAttempts) {
-    this->length = length;
-    this->maxAttempts = maxAttempts;
-    this->targetWord = getRandomWord(length);
+Game::Game(int length, int maxAttempts)
+    : length(length), maxAttempts(maxAttempts), 
+      targetWord(getRandomWord(length)), isWon(false) {}
+
+void Game::renderBoard() const {
+    clearScreen();
+    printBanner();
+
+    for (const auto& guess : guesses) {
+        auto feedback = evaluate(targetWord, guess);
+        printGuess(guess, feedback);
+    }
+    std::cout << "\n";
 }
 
-void Game::play(){
-    clearScreen();
-    int attempts = 0;
-    printBanner();
-    while(attempts < maxAttempts && !isWon){
-        std::string guess;
-        std::cout << "Attempt " << (attempts + 1) << "/" << maxAttempts << ". Enter your guess: ";
+std::string Game::promptGuess(int attemptNumber) {
+    std::string guess;
+
+    while (true) {
+        std::cout << "Attempt " << attemptNumber << "/" << maxAttempts << ". Enter your guess: ";
         std::cin >> guess;
-        if(guess.length() != length){
+
+        if (guess.length() != static_cast<size_t>(length)) {
             std::cout << "Please enter a " << length << "-letter word.\n";
             continue;
         }
-        if(!isValidWord(guess)){
+
+        if (!isValidWord(guess)) {
             std::cout << "Invalid word. Please try again.\n";
             continue;
         }
-        for(auto & c: guess) c = std::toupper(c);
-        clearScreen();
-        printBanner();
-        guesses.push_back(guess);
-        for(const auto& g : guesses){
-            std::vector<LetterStatus> feedback = evaluate(targetWord, g);
-            printGuess(g, feedback);
-            std::cout << "\n";
+
+        for (char& c : guess) {
+            c = std::toupper(c);
         }
-        std::vector<LetterStatus> feedback = evaluate(targetWord, guess);
-        if(guess == targetWord){
-            isWon = true;
-            std::cout << "Congratulations! You've guessed the word: " ;
-            std::cout << "\nDefinition: " << getDefinition(targetWord) << "\n";
-        } else {
-            std::cout << "Incorrect guess. Try again.\n";
-            attempts++;
-        }
+        return guess;
     }
-    if (!isWon) {
+}
+
+void Game::printSummary() const {
+    if (isWon) {
+        std::cout << "Congratulations! You've guessed the word: " << targetWord << "\n";
+    } else {
         std::cout << "\nGame Over! The secret word was: " << targetWord << "\n";
-        std::cout << "Definition: " << getDefinition(targetWord) << "\n";
     }
+
+    std::cout << "Definition: " << getDefinition(targetWord) << "\n";
+}
+
+void Game::play() {
+    renderBoard();
+
+    while (guesses.size() < static_cast<size_t>(maxAttempts) && !isWon) {
+        std::string guess = promptGuess(guesses.size() + 1);
+        guesses.push_back(guess);
+        renderBoard();
+
+        if (guess == targetWord) {
+            isWon = true;
+        }
+    }
+
+    printSummary();
 }
