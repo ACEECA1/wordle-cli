@@ -25,7 +25,3 @@ std::vector<LetterStatus> evaluate(const std::string& secret , const std::string
     }
     return result;
 }
-
-
-
-
