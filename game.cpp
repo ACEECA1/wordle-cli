@@ -34,6 +34,7 @@ void Game::play(){
         for(const auto& g : guesses){
             std::vector<LetterStatus> feedback = evaluate(targetWord, g);
             printGuess(g, feedback);
+            std::cout << "\n";
         }
         std::vector<LetterStatus> feedback = evaluate(targetWord, guess);
         if(guess == targetWord){
