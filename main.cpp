@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "display.hpp"
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -58,6 +59,8 @@ bool parseArgs(int argc, char* argv[], Config& cfg) {
 }
 
 int main(int argc, char* argv[]) {
+    initTerminal();
+
     Config config;
     if (!parseArgs(argc, argv, config)) {
         return 0;

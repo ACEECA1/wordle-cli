@@ -1,6 +1,6 @@
 # Wordle CLI 🟩🟨⬛
 
-A fast, modular, terminal-based **Wordle** game built in C++17 with real-time REST API integration, ANSI terminal styling, and customizable gameplay options.
+A fast, modular, cross-platform terminal-based **Wordle** game built in C++17 with real-time REST API integration, live QWERTY keyboard tracking, ANSI terminal styling, and customizable gameplay options.
 
 ---
 
@@ -9,9 +9,10 @@ A fast, modular, terminal-based **Wordle** game built in C++17 with real-time RE
 - **Accurate Wordle Mechanics**: Implements a two-pass algorithm correctly handling duplicate letters and position matching.
 - **Dynamic API-Powered Word Bank**: Fetches random secret words on the fly based on your chosen word length.
 - **Real-Time Word Validation**: Verifies player guesses against a live dictionary API to prevent invalid words.
+- **Live QWERTY Keyboard Tracker**: Displays the status of all letters (Green, Yellow, Gray, Unused) directly beneath the board.
 - **Educational Word Definitions**: Automatically looks up and displays the real dictionary definition of the secret word at the end of every match.
 - **Customizable Gameplay**: Play with any word length (3–12 letters) and custom attempt limits via CLI flags (`-l`, `-m`).
-- **Vibrant ANSI Terminal UI**: Colored feedback tiles (Green, Yellow, Gray) with live board redrawing.
+- **Cross-Platform & Zero Manual Dependencies**: Uses CMake `FetchContent` to download and compile dependencies (`cpr`, `nlohmann/json`) automatically on Windows, Linux, and macOS.
 
 ---
 
@@ -26,71 +27,39 @@ The game connects to two public REST APIs via **`libcpr`** and **`nlohmann/json`
 
 ---
 
-## 📦 Prerequisites (Arch Linux)
+## 🪟 Windows Setup (One-Click)
 
-Install the required build tools and libraries:
-
-```bash
-# Compiler, build tools, curl, and OpenSSL
-sudo pacman -S base-devel curl openssl
-
-# JSON parser (header-only)
-sudo pacman -S nlohmann-json
-
-# libcpr (C++ Requests wrapper)
-# If not already installed, build & install from source:
-git clone https://github.com/libcpr/cpr.git /tmp/cpr
-cmake -B /tmp/cpr/build -S /tmp/cpr -DCPR_USE_SYSTEM_CURL=ON -DCPR_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release
-sudo cmake --build /tmp/cpr/build --target install
+### 1. One-Click Build & Install:
+Double-click **`install.bat`** (or run it in Command Prompt / PowerShell):
+```cmd
+install.bat
 ```
+This automatically:
+1. Downloads and compiles all required libraries (`cpr`, `nlohmann/json`) via CMake.
+2. Compiles `wordle.exe` in Release mode.
+3. Installs `wordle.exe` to `%LOCALAPPDATA%\Wordle` and adds it to your user `PATH`.
 
----
-
-## 🛠️ Build & Run Locally
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/ACEECA1/wordle-cli.git
-   cd wordle-cli
-   ```
-
-2. **Compile the project:**
-   ```bash
-   make
-   ```
-
-3. **Run the game:**
-   ```bash
-   ./wordle
-   ```
-
----
-
-## 🚀 How to Run Globally (`wordle` from Any Directory)
-
-To make `wordle` a global command that you can run from anywhere without being inside this folder:
-
-### Option 1: System-Wide Install (Recommended)
-```bash
-sudo make install
-```
-This copies the binary to `/usr/local/bin/wordle`. Now open any terminal and simply type:
-```bash
+Now open any Command Prompt or PowerShell and type:
+```cmd
 wordle
 ```
 
-To uninstall:
-```bash
-sudo make uninstall
-```
-
 ---
 
-### Option 2: User-Level Install (No `sudo` needed)
+## 🐧 Linux / macOS Setup
+
+### Option 1: Using CMake (Auto-fetches dependencies)
 ```bash
-make install PREFIX=$HOME/.local
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+sudo cmake --install build
 ```
-*(Ensure `~/.local/bin` is in your `$PATH`)*.
+
+### Option 2: Using Makefile
+```bash
+make
+make install PREFIX=$HOME/.local   # or sudo make install
+```
 
 ---
 
@@ -101,8 +70,8 @@ Usage:
   wordle [options]
 
 Options:
-  -l, --length <n>        Word length (default: 5, min: 3, max: 12)
-  -m, --max-attempts <n>  Maximum allowed guesses (default: 6, min: 1)
+  -l, --length <n>        Word length (3–12, default: 5)
+  -m, --max-attempts <n>  Maximum allowed guesses (min: 1, default: 6)
   -h, --help              Show help message
 ```
 
@@ -125,11 +94,13 @@ wordle -l 4 -m 4
 
 ```text
 ├── evaluator.hpp / evaluator.cpp   # Core two-pass letter matching logic
-├── display.hpp / display.cpp       # ANSI color blocks & terminal rendering
+├── display.hpp / display.cpp       # ANSI color blocks, keyboard tracker & terminal rendering
 ├── dictionary.hpp / dictionary.cpp # libcpr REST API integration, JSON parsing & definitions
 ├── game.hpp / game.cpp             # Game state machine & interactive loop
 ├── main.cpp                        # CLI argument parsing and entrypoint
-└── Makefile                        # Compilation and global installation rules
+├── CMakeLists.txt                  # Cross-platform CMake build with FetchContent
+├── build.bat / install.bat         # One-click Windows build and install scripts
+└── Makefile                        # Native Linux compilation and installation rules
 ```
 
 ---
