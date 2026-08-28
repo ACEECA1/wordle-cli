@@ -85,12 +85,12 @@ std::string Game::promptGuess(int attemptNumber) {
 
 void Game::printSummary() const {
     if (isWon) {
-        std::cout << "\033[1;32m🎉 Congratulations! You guessed the word: " << targetWord << "\033[0m\n\n";
+        std::cout << "\033[1;32mCongratulations! You guessed the word: " << targetWord << "\033[0m\n\n";
     } else {
         std::cout << "\n\033[1;31mGame Over! The secret word was: " << targetWord << "\033[0m\n\n";
     }
 
-    std::cout << "\033[1;36m📖 Definition:\033[0m " << getDefinition(targetWord) << "\n\n";
+    std::cout << "\033[1;36mDefinition:\033[0m " << getDefinition(targetWord) << "\n\n";
 }
 
 void Game::play() {
